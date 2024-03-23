@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kylikeio/screens/admin_screen.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 import 'screens/home_screen.dart';
 
 void main() {
+  setPathUrlStrategy();
   runApp(const WebApp());
 }
 
@@ -17,7 +19,9 @@ class WebApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ΚΥΛΙΚΕΙΟ ΔΥΒ',
+      locale: const Locale('el', 'GR'),
       themeMode: ThemeMode.system,
+      initialRoute: '/',
       getPages: [
         GetPage(
           name: '/',

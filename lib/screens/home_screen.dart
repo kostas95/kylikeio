@@ -57,6 +57,8 @@ class MainScreen extends StatelessWidget {
                         (index) {
                           return GridTile(
                             child: MaterialButton(
+                              hoverElevation: 0,
+                              animationDuration: Duration.zero,
                               onPressed: () {},
                               color: Get.theme.primaryColor.withOpacity(0.6),
                               child: Center(
