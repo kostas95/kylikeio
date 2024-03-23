@@ -1,26 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kylikeio/services/auth_service.dart';
 
 class AdminScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text('Admin Panel Login'),
+    return Obx(() {
+      if (Get.find<AuthService>().isLoggedIn.value) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Center(
+              child: Text('Admin Dashboard'),
+            ),
+            leading: IconButton(
+              onPressed: () => Get.offAllNamed("/"),
+              icon: Icon(Icons.home),
+            ),
+          ),
+          body: Center(
+            child: MaterialButton(
+              hoverElevation: 0,
+              elevation: 0,
+              padding: EdgeInsets.all(16),
+              color: Get.theme.primaryColor.withOpacity(0.7),
+              onPressed: () {
+                Get.find<AuthService>().logout();
+              },
+              child: Text(
+                'Logout',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+
+      return Scaffold(
+        appBar: AppBar(
+          title: Center(
+            child: Text('Admin Login'),
+          ),
+          leading: IconButton(
+            onPressed: () => Get.offAllNamed("/"),
+            icon: Icon(Icons.home),
+          ),
         ),
-        leading: IconButton(
-          onPressed: () => Get.offAllNamed("/"),
-          icon: Icon(Icons.home),
+        body: Center(
+          child: SizedBox(
+            width: Get.width * 0.5,
+            child: LoginForm(),
+          ),
         ),
-      ),
-      body: Center(
-        child: SizedBox(
-          width: Get.width * 0.5,
-          child: LoginForm(),
-        ),
-      ),
-    );
+      );
+    });
   }
 }
 
@@ -63,6 +97,8 @@ class LoginForm extends StatelessWidget {
                 String username = _usernameController.text;
                 String password = _passwordController.text;
                 print('Username: $username, Password: $password');
+
+                Get.find<AuthService>().login(username, password);
               },
               child: Text(
                 'Login',

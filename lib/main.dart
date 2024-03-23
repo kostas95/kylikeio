@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kylikeio/screens/admin_screen.dart';
+import 'package:kylikeio/services/auth_service.dart';
 import 'package:url_strategy/url_strategy.dart';
-
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'screens/home_screen.dart';
+import 'services/database_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   setPathUrlStrategy();
+  Get.put<AuthService>(
+    AuthService(),
+    permanent: true,
+  );
   runApp(const WebApp());
 }
 

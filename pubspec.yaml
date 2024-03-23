@@ -37,6 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.6
   get: ^4.6.6
   url_strategy: ^0.2.0
+  firebase_auth: ^4.17.9
+  firebase_core: ^2.27.1
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
