@@ -1,4 +1,4 @@
-import 'package:kylikeio/models/product.dart';
+import 'product_sold.dart';
 
 class Sales {
   double? earnings;
@@ -6,10 +6,10 @@ class Sales {
   DateTime? date;
   String? notes;
 
-  Sales.fromMap(Map map) {
+  Sales.fromMap(dynamic map) {
     this.earnings = map["earnings"];
-    this.productSold = map["productSold"].map((p) => ProductSold.fromMap(p))?.toList();
-    this.date = DateTime.parse(map["dateTime"]);
+    // this.productSold = map["productSold"].map((p) => ProductSold.fromMap(p))?.toList();
+    this.date = DateTime.parse(map["date"]);
     this.notes = map["notes"];
   }
 
@@ -19,10 +19,4 @@ class Sales {
     "date": this.date,
     "notes": this.notes,
   };
-}
-
-class ProductSold extends Product {
-  int? quantity;
-
-  ProductSold.fromMap(map);
 }

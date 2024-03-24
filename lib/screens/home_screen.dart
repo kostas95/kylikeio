@@ -1,11 +1,16 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kylikeio/models/product.dart';
+import 'package:kylikeio/models/product_sold.dart';
 import 'package:kylikeio/repository/products_repository.dart';
+import 'package:kylikeio/repository/sells_repository.dart';
 
 class MainScreenController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
-  final RxInt quantity = 0.obs;
+  final RxInt quantity = 1.obs;
+  RxBool cancelButtonIsVisible = false.obs;
+  ProductSold? lastProductSold;
 
   @override
   void onInit() async {
@@ -19,44 +24,50 @@ class MainScreenController extends GetxController {
     return await ProductsRepository().getProducts();
   }
 
-  resetQuantity() {
-    quantity.value = 0;
-  }
-
   increaseQuantity() {
-    quantity.value ++;
+    if (quantity.value < 20) quantity.value++;
   }
 
   decreaseQuantity() {
-    quantity.value --;
+    if (quantity.value > 1) quantity.value--;
   }
 
-  List<Product> generateDummyProducts() {
-    List<Product> products = [];
+  makeTransaction({required Product product}) async {
+    ProductSold ps = ProductSold();
+    ps.date = DateTime.now();
+    ps.name = product.name;
+    ps.price = product.price;
+    ps.quantity = quantity.value;
+    ps.category = product.category;
 
-    for (int i = 0; i < 20; i++) {
-      Product product = Product();
-      product.id = 'product_$i';
-      product.name = 'Product $i';
-      switch (i % 4) {
-        case 0:
-          product.category = "Καφέδες - Ροφήματα";
-          break;
-        case 1:
-          product.category = "Σφολιάτες - Σάντουιτς";
-          break;
-        case 2:
-          product.category = "Αναψυκτικά";
-        case 3:
-          product.category = "Chips - Snacks";
-        default:
-      }
-      product.price = (i + 1) * 10.0; // Assuming price increases by 10 for each product
-      product.notes = 'Notes for Product $i';
-      products.add(product);
-    }
+    // Cache the last item that was sold
+    lastProductSold = ps;
 
-    return products;
+    //Handle the UI
+    _resetQuantity();
+    _displayCancelButton();
+
+    await SellsRepository().addSell(ps);
+  }
+
+  cancelLastTransaction() async {
+    cancelButtonIsVisible.value = false;
+
+    await SellsRepository().deleteLastDocument();
+  }
+
+  _resetQuantity() {
+    quantity.value = 1;
+  }
+
+  _displayCancelButton() async {
+    cancelButtonIsVisible.value = true;
+    Timer(
+      Duration(seconds: 60),
+      () {
+        cancelButtonIsVisible.value = false;
+      },
+    );
   }
 }
 
@@ -86,67 +97,105 @@ class MainScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Row(
-        children: List.generate(
-          4,
-          (index) => Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Get.theme.primaryColor,
-                ),
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    tileColor: Colors.white,
-                    title: Center(
-                      child: Text(
-                        getCategoryTitle(index),
-                      ),
+      body: Column(
+        children: [
+          Obx(() {
+            if (_controller.cancelButtonIsVisible.value) {
+              return ListTile(
+                tileColor: Colors.red,
+                onTap: () {
+                  showFullScreenDialog(
+                    context,
+                    product: _controller.lastProductSold,
+                    productQuantity: _controller.lastProductSold!.quantity!,
+                    add: false,
+                  );
+                },
+                title: Center(
+                  child: Text(
+                    "ΑΚΥΡΩΣΗ ΤΕΛΕΥΤΑΙΑΣ ΠΩΛΗΣΗΣ",
+                    style: TextStyle(
+                      color: Colors.white,
                     ),
                   ),
-                  Expanded(
-                    child: Obx(
-                      () => GridView(
-                        shrinkWrap: true,
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 256,
-                          childAspectRatio: 1,
-                          mainAxisExtent: 128,
+                ),
+              );
+            }
+            return Container();
+          }),
+          Expanded(
+            child: Row(
+              children: List.generate(
+                4,
+                (index) => Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Get.theme.primaryColor,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          tileColor: Colors.white,
+                          title: Center(
+                            child: Text(
+                              getCategoryTitle(index),
+                            ),
+                          ),
                         ),
-                        children: List.from(
-                          _controller.products
-                              .where(
-                                (p) => p.category == getCategoryTitle(index),
-                              )
-                              .map(
-                                (p) => GridTile(
-                                  child: MaterialButton(
-                                    hoverElevation: 0,
-                                    animationDuration: Duration.zero,
-                                    onPressed: () {},
-                                    color: Get.theme.primaryColor.withOpacity(0.6),
-                                    child: Center(
-                                      child: Text(
-                                        p.name ?? "Άγνωστο προϊόν",
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                        Expanded(
+                          child: Obx(
+                            () => GridView(
+                              shrinkWrap: true,
+                              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 256,
+                                childAspectRatio: 1,
+                                mainAxisExtent: 128,
+                              ),
+                              children: List.from(
+                                _controller.products
+                                    .where(
+                                      (p) => p.category == getCategoryTitle(index),
+                                    )
+                                    .map(
+                                      (p) => GridTile(
+                                        child: MaterialButton(
+                                          hoverElevation: 0,
+                                          animationDuration: Duration.zero,
+                                          onPressed: () {
+                                            if (p.name != null)
+                                              showFullScreenDialog(
+                                                context,
+                                                product: p,
+                                                productQuantity: _controller.quantity.value,
+                                                add: true,
+                                              );
+                                          },
+                                          color: Get.theme.primaryColor.withOpacity(0.6),
+                                          child: Center(
+                                            child: Text(
+                                              p.name ?? "Άγνωστο προϊόν",
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
                               ),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -164,6 +213,80 @@ class MainScreen extends StatelessWidget {
       default:
         return "Άλλο";
     }
+  }
+
+  void showFullScreenDialog(
+    BuildContext context, {
+    required dynamic product,
+    required int productQuantity,
+    bool add = true,
+  }) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // Use WillPopScope to prevent closing dialog by tapping outside
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            backgroundColor: add ? Colors.green : Colors.red,
+            content: Container(
+              width: Get.width,
+              height: Get.height,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (add)
+                      Text(
+                        'ΠΟΥΛΗΘΗΚΕ',
+                        style: TextStyle(
+                          fontSize: Get.textTheme.headlineLarge!.fontSize!,
+                          color: Colors.white,
+                        ),
+                      )
+                    else
+                      Text(
+                        'ΑΚΥΡΩΘΗΚΕ',
+                        style: TextStyle(
+                          fontSize: Get.textTheme.headlineLarge!.fontSize!,
+                          color: Colors.white,
+                        ),
+                      ),
+                    Text(
+                      'ΕΙΔΟΣ: ${product.name}',
+                      style: TextStyle(
+                        fontSize: Get.textTheme.headlineLarge!.fontSize!,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      'ΠΟΣΟΤΗΤΑ: ${productQuantity}',
+                      style: TextStyle(
+                        fontSize: Get.textTheme.headlineLarge!.fontSize!,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    // Close the dialog after 500 milliseconds
+    Timer(
+      Duration(milliseconds: 500),
+      () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    if (add) {
+      await _controller.makeTransaction(product: product as Product);
+    } else
+      await _controller.cancelLastTransaction();
   }
 }
 
