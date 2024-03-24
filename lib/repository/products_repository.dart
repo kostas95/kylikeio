@@ -4,8 +4,6 @@ import 'package:kylikeio/models/product.dart';
 class ProductsRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-// Other methods...
-
   Future<void> addProduct(Product product) async {
     try {
       // Reference to the document for the user in Firestore
@@ -16,6 +14,35 @@ class ProductsRepository {
     } catch (e) {
       print('Failed to write data to Firestore: $e');
       // Handle error
+    }
+  }
+
+  Future<void> deleteProduct(String productId) async {
+    try {
+      // Reference to the document for the user in Firestore
+      DocumentReference product = _firestore.collection('products').doc(productId);
+
+      // Write data to Firestore
+      await product.delete();
+    } catch (e) {
+      print('Failed to delete data from Firestore: $e');
+      // Handle error
+    }
+  }
+
+  Future<List> getProducts() async {
+    List dataList = [];
+    final CollectionReference _collection = FirebaseFirestore.instance.collection('products');
+    try {
+      QuerySnapshot querySnapshot = await _collection.get();
+      querySnapshot.docs.forEach((DocumentSnapshot document) {
+        dataList.add(document.data());
+      });
+      return dataList;
+    } catch (e) {
+      // Handle errors
+      print("Failed to retrieve data: $e");
+      return [];
     }
   }
 }
