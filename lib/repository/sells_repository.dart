@@ -30,11 +30,21 @@ class SellsRepository {
     }
   }
 
-  Future<List<ProductSold>> getSells() async {
+  Future<List<ProductSold>> getSells(DateTime dateTime) async {
     List<ProductSold> dataList = <ProductSold>[];
     final CollectionReference _collection = FirebaseFirestore.instance.collection('products_sold');
     try {
-      QuerySnapshot querySnapshot = await _collection.get();
+      // Define the start and end of the day
+      DateTime startOfDay = DateTime(dateTime.year, dateTime.month, dateTime.day);
+      DateTime endOfDay = DateTime(dateTime.year, dateTime.month, dateTime.day + 1);
+
+      QuerySnapshot querySnapshot = await _collection
+          .where(
+            'date',
+            isGreaterThanOrEqualTo: startOfDay.toIso8601String(),
+            isLessThan: endOfDay.toIso8601String(),
+          )
+          .get();
       querySnapshot.docs.forEach((DocumentSnapshot document) {
         dataList.add(
           ProductSold.fromMap(

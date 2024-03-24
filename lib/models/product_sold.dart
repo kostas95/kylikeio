@@ -6,6 +6,11 @@ class ProductSold extends Product {
 
   ProductSold();
 
+  double? get getIncome {
+    if (quantity != null && price != null) return (quantity! * price!);
+    else return null;
+  }
+
   ProductSold.fromMap(String id, dynamic data) {
     this.id = id;
     this.name = data["name"];
@@ -17,13 +22,13 @@ class ProductSold extends Product {
   }
 
   Map<String, dynamic> toMap() => {
-    "name": this.name,
-    "quantity": this.quantity,
-    "date": this.date?.toIso8601String(),
-    "price": this.price,
-    "category": this.category,
-    "notes": this.notes,
-  };
+        "name": this.name,
+        "quantity": this.quantity,
+        "date": this.date?.toIso8601String(),
+        "price": this.price,
+        "category": this.category,
+        "notes": this.notes,
+      };
 
   @override
   String toString() {
