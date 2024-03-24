@@ -149,11 +149,13 @@ class ProductDialog extends StatelessWidget {
           padding: EdgeInsets.all(16),
           color: Get.theme.primaryColor.withOpacity(0.7),
           onPressed: () async {
-            Get.back();
-            if (editMode) {
-              await _controller.editProduct(product);
-            } else {
-              await _controller.addProduct(product);
+            if (product.price != null && product.name != null) {
+              Get.back();
+              if (editMode) {
+                await _controller.editProduct(product);
+              } else {
+                await _controller.addProduct(product);
+              }
             }
           },
           child: Text(

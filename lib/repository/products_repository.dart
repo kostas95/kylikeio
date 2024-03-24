@@ -4,17 +4,19 @@ import 'package:kylikeio/models/product.dart';
 class ProductsRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> addProduct(Product product) async {
+  Future<String?> addProduct(Product product) async {
     try {
       // Reference to the document for the user in Firestore
       CollectionReference products = _firestore.collection('products');
 
       // Write data to Firestore
-      await products.add(product.toMap());
+      DocumentReference<Object?> ref = await products.add(product.toMap());
+      return ref.id;
     } catch (e) {
       print('Failed to write data to Firestore: $e');
       // Handle error
     }
+    return null;
   }
 
   Future<void> editProduct(Product p) async {

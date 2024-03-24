@@ -8,14 +8,6 @@ import 'widgets/login_form.dart';
 
 class AdminScreenController extends GetxController {
   final RxString index = "0".obs;
-  final RxList products = [].obs;
-
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    // getProducts;
-    super.onInit();
-  }
 }
 
 class AdminScreen extends StatelessWidget {
@@ -105,7 +97,7 @@ class AdminScreen extends StatelessWidget {
       case "1":
         return ProductsScreen();
       default:
-        return Text("deef");
+        return SalesScreen();
     }
   }
 }

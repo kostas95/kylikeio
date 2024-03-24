@@ -20,7 +20,8 @@ class ProductsScreenController extends GetxController {
 
   Future addProduct(Product p) async {
     if (p.name != null && p.price != null) {
-      await ProductsRepository().addProduct(p);
+      String? id = await ProductsRepository().addProduct(p);
+      p.id = id;
       products.insert(0, p);
     }
   }
@@ -30,14 +31,14 @@ class ProductsScreenController extends GetxController {
       int index = products.indexWhere((product) => product.id == p.id);
       products.removeAt(index);
       products.insert(index, p);
-      await ProductsRepository().editProduct(p);
+      if (p.id != null) await ProductsRepository().editProduct(p);
     }
   }
 
-  Future deleteProduct(String id) async {
+  Future deleteProduct(String? id) async {
     products.removeWhere((product) => product.id == id);
     products.refresh();
-    await ProductsRepository().deleteProduct(id);
+    if (id != null) await ProductsRepository().deleteProduct(id);
   }
 
   List<Product> generateDummyProducts() {
@@ -159,7 +160,7 @@ class ProductTable extends StatelessWidget {
               _sortColumnIndex.value = columnIndex;
               _sortAscending.value = ascending;
               _controller.products.sort(
-                    (a, b) {
+                (a, b) {
                   if (ascending) {
                     return a.category!.compareTo(b.category!);
                   } else {
@@ -175,7 +176,7 @@ class ProductTable extends StatelessWidget {
               _sortColumnIndex.value = columnIndex;
               _sortAscending.value = ascending;
               _controller.products.sort(
-                    (a, b) {
+                (a, b) {
                   if (ascending) {
                     return a.price!.compareTo(b.price!);
                   } else {
@@ -225,7 +226,7 @@ class ProductTable extends StatelessWidget {
                     color: Colors.red,
                   ),
                   onPressed: () async {
-                    if (product.id != null) await _controller.deleteProduct(product.id!);
+                    if (product.id != null) await _controller.deleteProduct(product.id);
                   },
                 ),
               ),
