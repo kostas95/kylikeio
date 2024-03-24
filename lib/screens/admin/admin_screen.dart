@@ -11,10 +11,11 @@ class AdminScreenController extends GetxController {
 }
 
 class AdminScreen extends StatelessWidget {
-  final AdminScreenController _controller = Get.put<AdminScreenController>(AdminScreenController());
+  const AdminScreen();
 
   @override
   Widget build(BuildContext context) {
+    final AdminScreenController _controller = Get.put<AdminScreenController>(AdminScreenController());
     return Obx(() {
       if (Get.find<AuthService>().isLoggedIn.value) {
         return Scaffold(

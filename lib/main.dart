@@ -35,11 +35,11 @@ class WebApp extends StatelessWidget {
       getPages: [
         GetPage(
           name: '/',
-          page: () => MainScreen(),
+          page: () => const MainScreen(),
         ),
         GetPage(
           name: '/admin',
-          page: () => AdminScreen(),
+          page: () => const AdminScreen(),
         ),
       ],
       theme: ThemeData(

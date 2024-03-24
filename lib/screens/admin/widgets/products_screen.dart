@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kylikeio/models/product.dart';
@@ -170,10 +171,17 @@ class ProductTable extends StatelessWidget {
         sortColumnIndex: _sortColumnIndex.value,
         sortAscending: _sortAscending.value,
         showCheckboxColumn: false,
-        columnSpacing: Get.mediaQuery.size.width < 1600 ? Get.width / 10 : Get.width / 5,
+        columnSpacing: 0,
         columns: [
           DataColumn(
-            label: Flexible(child: Text('Όνομα')),
+            label: Flexible(
+              child: Text(''),
+            ),
+          ),
+          DataColumn(
+            label: Flexible(
+              child: Text('Όνομα'),
+            ),
             onSort: (columnIndex, ascending) {
               _sortColumnIndex.value = columnIndex;
               _sortAscending.value = ascending;
@@ -235,9 +243,13 @@ class ProductTable extends StatelessWidget {
                 if (a.availableAmount == null && b.availableAmount == null) {
                   return 0; // Both values are null, consider them equal
                 } else if (a.availableAmount == null) {
-                  return ascending ? 1 : -1; // Null values come last when sorting in ascending order, first when sorting in descending order
+                  return ascending
+                      ? 1
+                      : -1; // Null values come last when sorting in ascending order, first when sorting in descending order
                 } else if (b.availableAmount == null) {
-                  return ascending ? -1 : 1; // Null values come first when sorting in ascending order, last when sorting in descending order
+                  return ascending
+                      ? -1
+                      : 1; // Null values come first when sorting in ascending order, last when sorting in descending order
                 } else {
                   // Both values are not null, perform normal comparison
                   return ascending
@@ -270,6 +282,15 @@ class ProductTable extends StatelessWidget {
               );
             },
             cells: [
+              DataCell(
+                Tooltip(
+                  message: product.active ? "Διαθέσιμο" : "Μη διαθέσιμο",
+                  child: CupertinoCheckbox(
+                    value: product.active,
+                    onChanged: null,
+                  ),
+                ),
+              ),
               DataCell(
                 Text(product.name ?? ''),
               ),

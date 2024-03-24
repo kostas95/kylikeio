@@ -14,8 +14,7 @@ class MainScreenController extends GetxController {
 
   @override
   void onInit() async {
-    products.addAll(await getProducts());
-    // products.addAll(generateDummyProducts());
+    products.addAll((await getProducts()).where((prod) => prod.active));
 
     super.onInit();
   }
@@ -72,12 +71,11 @@ class MainScreenController extends GetxController {
 }
 
 class MainScreen extends StatelessWidget {
-  final MainScreenController _controller = Get.put<MainScreenController>(MainScreenController());
-
-  MainScreen({super.key});
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    MainScreenController _controller = Get.put<MainScreenController>(MainScreenController());
     return Scaffold(
       backgroundColor: Get.theme.primaryColor.withOpacity(0.2),
       floatingActionButton: QuantityButton(),
@@ -284,9 +282,9 @@ class MainScreen extends StatelessWidget {
     );
 
     if (add) {
-      await _controller.makeTransaction(product: product as Product);
+      await Get.find<MainScreenController>().makeTransaction(product: product as Product);
     } else
-      await _controller.cancelLastTransaction();
+      await Get.find<MainScreenController>().cancelLastTransaction();
   }
 }
 

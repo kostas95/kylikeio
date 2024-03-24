@@ -28,7 +28,7 @@ class ProductDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Προσθήκη Προϊόντος'),
+          Text(editMode ? 'Επεξεργασία Προϊόντος' : 'Προσθήκη Προϊόντος'),
           IconButton(
             icon: Icon(
               Icons.close,
@@ -164,6 +164,25 @@ class ProductDialog extends StatelessWidget {
                     },
                   ),
                   subtitle: Text("Σημειώσεις"),
+                ),
+              ),
+              SizedBox(
+                width: 512,
+                child: Obx(
+                  () {
+                    RxBool activeRx = product.active.obs;
+                    return CheckboxListTile(
+                      onChanged: (v) {
+                        if (v != null) {
+                          product.active = v;
+                          activeRx.value = product.active;
+                        }
+                      },
+                      value: activeRx.value,
+                      title: Text("Διαθέσιμο προϊόν"),
+                      subtitle: Text("Αν απενεργοποιηθεί δε θα εμφανίζεται στον τιμοκατάλογο"),
+                    );
+                  },
                 ),
               ),
             ],

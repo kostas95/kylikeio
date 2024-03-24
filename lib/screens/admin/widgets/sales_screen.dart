@@ -146,7 +146,7 @@ class ProductTable extends StatelessWidget {
         sortColumnIndex: _sortColumnIndex.value,
         sortAscending: _sortAscending.value,
         showCheckboxColumn: false,
-        columnSpacing: Get.mediaQuery.size.width < 1600 ? Get.width / 10 : Get.width / 5,
+        columnSpacing: 0,
         columns: [
           DataColumn(
             label: Flexible(
