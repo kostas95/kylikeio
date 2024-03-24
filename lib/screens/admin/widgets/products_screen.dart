@@ -1,22 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:kylikeio/models/product.dart';
 import 'package:kylikeio/repository/products_repository.dart';
+import 'package:kylikeio/screens/admin/widgets/product_dialog.dart';
 
 class ProductsScreenController extends GetxController {
   final List<Product> products = [];
 
   @override
-  void onInit() {
+  void onInit() async {
     products.addAll(generateDummyProducts());
+    await getProducts();
 
     super.onInit();
+  }
+
+  Future getProducts() async {
+    await ProductsRepository().getProducts();
   }
 
   Future addProduct(Product p) async {
     if (p.name != null && p.price != null) {
       await ProductsRepository().addProduct(p);
+    }
+  }
+
+  Future editProduct(Product p) async {
+    if (p.name != null && p.price != null) {
+      await ProductsRepository().editProduct(p);
     }
   }
 
@@ -82,129 +93,8 @@ class ProductsScreen extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   Product p = Product();
-                  final RxString cat = "Καφέδες - Ροφήματα".obs;
                   p.category = "Καφέδες - Ροφήματα";
-                  return AlertDialog(
-                    contentPadding: EdgeInsets.all(4),
-                    title: Text('Προσθήκη Προϊόντος'),
-                    content: Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Form(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              width: 512,
-                              child: ListTile(
-                                title: TextFormField(
-                                  onChanged: (v) {
-                                    p.name = v;
-                                  },
-                                ),
-                                subtitle: Text("Όνομα Προϊόντος"),
-                              ),
-                            ),
-                            Obx(
-                              () => Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 16.0,
-                                  right: 16.0,
-                                  top: 16.0,
-                                ),
-                                child: DropdownButton<String>(
-                                  hint: Text("Κατηγορία"),
-                                  isExpanded: true,
-                                  autofocus: false.obs.value,
-                                  value: cat.value,
-                                  onChanged: (String? v) {
-                                    cat.value = v!;
-                                    p.category = v;
-                                  },
-                                  items: [
-                                    "Καφέδες - Ροφήματα",
-                                    "Σφολιάτες - Σάντουιτς",
-                                    "Αναψυκτικά",
-                                    "Chips - Snacks",
-                                  ].map(
-                                    (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 512,
-                              child: ListTile(
-                                title: TextFormField(
-                                  onChanged: (v) {
-                                    p.price = double.tryParse(v);
-                                  },
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
-                                    TextInputFormatter.withFunction(
-                                      (oldValue, newValue) {
-                                        final text = newValue.text;
-                                        return text.isEmpty
-                                            ? newValue
-                                            : double.tryParse(text) == null
-                                                ? oldValue
-                                                : newValue;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Text("Τιμή Προϊόντος"),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 512,
-                              child: ListTile(
-                                title: TextFormField(
-                                  onChanged: (v) {
-                                    p.notes = v;
-                                  },
-                                ),
-                                subtitle: Text("Σημειώσεις"),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    actionsAlignment: MainAxisAlignment.spaceBetween,
-                    actions: <Widget>[
-                      MaterialButton(
-                        hoverElevation: 0,
-                        elevation: 0,
-                        padding: EdgeInsets.all(16),
-                        color: Get.theme.primaryColor.withOpacity(0.7),
-                        onPressed: () async {
-                          Navigator.of(context).pop();
-                          await _controller.addProduct(p);
-                        },
-                        child: Text(
-                          'Προσθήκη',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      MaterialButton(
-                        hoverElevation: 0,
-                        elevation: 0,
-                        padding: EdgeInsets.all(16),
-                        color: Colors.transparent,
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Κλείσιμο'),
-                      ),
-                    ],
-                  );
+                  return ProductDialog(product: p);
                 },
               );
             },
@@ -234,6 +124,7 @@ class ProductTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DataTable(
+      showCheckboxColumn: false,
       columnSpacing: Get.width / 5,
       columns: [
         DataColumn(
@@ -254,6 +145,17 @@ class ProductTable extends StatelessWidget {
       ],
       rows: products.map((product) {
         return DataRow(
+          onSelectChanged: (v) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return ProductDialog(
+                  product: product,
+                  editMode: true,
+                );
+              },
+            );
+          },
           cells: [
             DataCell(
               Text(product.name ?? ''),

@@ -7,12 +7,12 @@ class Product {
 
   Product();
 
-  Product.fromMap(Map map) {
-    this.id = map["id"];
-    this.name = map["name"];
-    this.category = map["category"];
-    this.price = map["price"];
-    this.notes = map["notes"];
+  Product.fromMap(String id, dynamic data) {
+    this.id = id;
+    this.name = data["name"];
+    this.category = data["category"];
+    this.price = data["price"];
+    this.notes = data["notes"];
   }
 
   Map<String, dynamic> toMap() => {

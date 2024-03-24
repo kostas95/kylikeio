@@ -17,6 +17,19 @@ class ProductsRepository {
     }
   }
 
+  Future<void> editProduct(Product p) async {
+    try {
+      // Reference to the document for the user in Firestore
+      DocumentReference product = _firestore.collection('products').doc(p.id);
+
+      // Write data to Firestore
+      await product.update(p.toMap());
+    } catch (e) {
+      print('Failed to write data to Firestore: $e');
+      // Handle error
+    }
+  }
+
   Future<void> deleteProduct(String productId) async {
     try {
       // Reference to the document for the user in Firestore
@@ -30,13 +43,18 @@ class ProductsRepository {
     }
   }
 
-  Future<List> getProducts() async {
-    List dataList = [];
+  Future<List<Product>> getProducts() async {
+    List<Product> dataList = <Product>[];
     final CollectionReference _collection = FirebaseFirestore.instance.collection('products');
     try {
       QuerySnapshot querySnapshot = await _collection.get();
       querySnapshot.docs.forEach((DocumentSnapshot document) {
-        dataList.add(document.data());
+        dataList.add(
+          Product.fromMap(
+            document.id,
+            document.data(),
+          ),
+        );
       });
       return dataList;
     } catch (e) {

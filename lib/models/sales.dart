@@ -24,5 +24,5 @@ class Sales {
 class ProductSold extends Product {
   int? quantity;
 
-  ProductSold.fromMap(super.map) : super.fromMap();
+  ProductSold.fromMap(map);
 }
