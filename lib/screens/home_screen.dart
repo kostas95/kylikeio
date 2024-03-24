@@ -201,13 +201,13 @@ class MainScreen extends StatelessWidget {
   String getCategoryTitle(int index) {
     switch (index) {
       case 0:
-        return "Καφέδες - Ροφήματα";
+        return ProductCategories.coffee;
       case 1:
-        return "Σφολιάτες - Σάντουιτς";
+        return ProductCategories.sandwich;
       case 2:
-        return "Αναψυκτικά";
+        return ProductCategories.drinks;
       case 3:
-        return "Chips - Snacks";
+        return ProductCategories.snacks;
       default:
         return "Άλλο";
     }

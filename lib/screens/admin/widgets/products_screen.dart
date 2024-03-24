@@ -4,10 +4,13 @@ import 'package:get/get.dart';
 import 'package:kylikeio/models/product.dart';
 import 'package:kylikeio/repository/products_repository.dart';
 import 'package:kylikeio/screens/admin/widgets/product_dialog.dart';
+import 'package:kylikeio/widgets/pdf_widget.dart';
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 
 class ProductsScreenController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
-  final RxString categoryFilter = "Καφέδες - Ροφήματα".obs;
+  final RxString categoryFilter = ProductCategories.coffee.obs;
 
   @override
   void onInit() async {
@@ -56,15 +59,15 @@ class ProductsScreenController extends GetxController {
       product.name = 'Product $i';
       switch (i % 4) {
         case 0:
-          product.category = "Καφέδες - Ροφήματα";
+          product.category = ProductCategories.coffee;
           break;
         case 1:
-          product.category = "Σφολιάτες - Σάντουιτς";
+          product.category = ProductCategories.sandwich;
           break;
         case 2:
-          product.category = "Αναψυκτικά";
+          product.category = ProductCategories.drinks;
         case 3:
-          product.category = "Chips - Snacks";
+          product.category = ProductCategories.snacks;
         default:
       }
       product.price = (i + 1) * 10.0; // Assuming price increases by 10 for each product
@@ -101,10 +104,10 @@ class ProductsScreen extends StatelessWidget {
                     _controller.categoryFilter.value = v!;
                   },
                   items: [
-                    "Καφέδες - Ροφήματα",
-                    "Σφολιάτες - Σάντουιτς",
-                    "Αναψυκτικά",
-                    "Chips - Snacks",
+                    ProductCategories.coffee,
+                    ProductCategories.sandwich,
+                    ProductCategories.drinks,
+                    ProductCategories.snacks,
                   ].map(
                     (String value) {
                       return DropdownMenuItem<String>(
@@ -115,28 +118,53 @@ class ProductsScreen extends StatelessWidget {
                   ).toList(),
                 ),
               ),
-              MaterialButton(
-                hoverElevation: 0,
-                elevation: 0,
-                padding: EdgeInsets.all(16),
-                color: Get.theme.primaryColor.withOpacity(0.7),
-                child: Text(
-                  "Προσθήκη Προϊόντος",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () {
-                  // Open dialog when button is pressed
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      Product p = Product();
-                      p.category = "Καφέδες - Ροφήματα";
-                      return ProductDialog(product: p);
+              Wrap(
+                children: [
+                  MaterialButton(
+                    hoverElevation: 0,
+                    elevation: 0,
+                    padding: EdgeInsets.all(16),
+                    color: Get.theme.primaryColor.withOpacity(0.7),
+                    child: Text(
+                      "Εξαγωγή Τιμοκαταλόγου",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () async {
+                      await PDF.exportPdf(
+                        documentTitle: "test",
+                        products: _controller.products,
+                      );
                     },
-                  );
-                },
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  MaterialButton(
+                    hoverElevation: 0,
+                    elevation: 0,
+                    padding: EdgeInsets.all(16),
+                    color: Get.theme.primaryColor.withOpacity(0.7),
+                    child: Text(
+                      "Προσθήκη Προϊόντος",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      // Open dialog when button is pressed
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          Product p = Product();
+                          p.category = ProductCategories.coffee;
+                          return ProductDialog(product: p);
+                        },
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),

@@ -5,7 +5,7 @@ import 'package:kylikeio/models/product.dart';
 import 'package:kylikeio/screens/admin/widgets/products_screen.dart';
 
 class ProductDialog extends StatelessWidget {
-  final RxString cat = "Καφέδες - Ροφήματα".obs;
+  final RxString cat = ProductCategories.coffee.obs;
   final Product product;
   final ProductsScreenController _controller = Get.find<ProductsScreenController>();
   final bool editMode;
@@ -79,10 +79,10 @@ class ProductDialog extends StatelessWidget {
                       product.category = v;
                     },
                     items: [
-                      "Καφέδες - Ροφήματα",
-                      "Σφολιάτες - Σάντουιτς",
-                      "Αναψυκτικά",
-                      "Chips - Snacks",
+                      ProductCategories.coffee,
+                      ProductCategories.sandwich,
+                      ProductCategories.drinks,
+                      ProductCategories.snacks,
                     ].map(
                       (String value) {
                         return DropdownMenuItem<String>(

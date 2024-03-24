@@ -41,6 +41,8 @@ dependencies:
   firebase_auth: ^4.17.9
   firebase_core: ^2.27.1
   intl: ^0.19.0
+  printing: ^5.12.0
+  pdf: ^3.10.8
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +62,22 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: ./assets/pdf-assets/material.ttf
+        - asset: ./assets/pdf-assets/fonts/open-sans/OpenSans-Regular.ttf
+        - asset: ./assets/pdf-assets/fonts/open-sans/OpenSans-Italic.ttf
+          style: italic
+        - asset: ./assets/pdf-assets/fonts/open-sans/OpenSans-Light.ttf
+          weight: 400
+        - asset: ./assets/pdf-assets/fonts/open-sans/OpenSans-Bold.ttf
+          weight: 600
+        - asset: ./assets/pdf-assets/fonts/open-sans/OpenSans-Semibold.ttf
+          weight: 700
+        - asset: ./assets/pdf-assets/fonts/open-sans/OpenSans-ExtraBold.ttf
+          weight: 800
 
   # To add assets to your application, add an assets section, like this:
   # assets:

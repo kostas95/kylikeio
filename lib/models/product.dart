@@ -1,3 +1,10 @@
+class ProductCategories {
+  static final String coffee = "Καφέδες - Ροφήματα";
+  static final String sandwich = "Σφολιάτες - Σάντουιτς";
+  static final String drinks = "Αναψυκτικά";
+  static final String snacks = "Chips - Snacks";
+}
+
 class Product {
   String? id;
   String? name;

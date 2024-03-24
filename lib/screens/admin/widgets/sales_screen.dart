@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kylikeio/models/product.dart';
 import 'package:kylikeio/models/product_sold.dart';
 import 'package:kylikeio/repository/sells_repository.dart';
 
 class SalesScreenController extends GetxController {
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxList<ProductSold> productsSold = <ProductSold>[].obs;
-  final RxString categoryFilter = "Καφέδες - Ροφήματα".obs;
+  final RxString categoryFilter = ProductCategories.coffee.obs;
 
   @override
   void onInit() async {
@@ -77,10 +78,10 @@ class SalesScreen extends StatelessWidget {
                     _controller.categoryFilter.value = v!;
                   },
                   items: [
-                    "Καφέδες - Ροφήματα",
-                    "Σφολιάτες - Σάντουιτς",
-                    "Αναψυκτικά",
-                    "Chips - Snacks",
+                    ProductCategories.coffee,
+                    ProductCategories.sandwich,
+                    ProductCategories.drinks,
+                    ProductCategories.snacks,
                   ].map(
                     (String value) {
                       return DropdownMenuItem<String>(
