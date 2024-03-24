@@ -151,7 +151,7 @@ class MainScreen extends StatelessWidget {
                               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                                 maxCrossAxisExtent: 256,
                                 childAspectRatio: 1,
-                                mainAxisExtent: 128,
+                                mainAxisExtent: 64,
                               ),
                               children: List.from(
                                 _controller.products
