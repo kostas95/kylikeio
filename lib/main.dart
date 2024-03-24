@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kylikeio/screens/admin_screen.dart';
+import 'package:kylikeio/screens/admin/admin_screen.dart';
 import 'package:kylikeio/services/auth_service.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';

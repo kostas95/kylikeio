@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,8 +14,6 @@ class AuthService extends GetxService {
     user = _auth.currentUser;
     // Listen for authentication state changes
     _auth.authStateChanges().listen((User? currentUser) {
-      print(currentUser);
-      print("car");
       user = currentUser;
       if (user != null) {
         isLoggedIn.value = true;
@@ -28,14 +25,10 @@ class AuthService extends GetxService {
 
   Future<void> login(String email, String password) async {
     try {
-      UserCredential credential = await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-
-      // print(credential);
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // await prefs.setString('user_email', user.email ?? '');
     } catch (e) {
       print('Failed to sign in: $e');
       // Handle error
@@ -45,7 +38,6 @@ class AuthService extends GetxService {
   Future<void> logout() async {
     try {
       await _auth.signOut();
-      // this.user = null;
     } catch (e) {
       print('Failed to sign out: $e');
       // Handle error
