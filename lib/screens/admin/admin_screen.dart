@@ -50,16 +50,35 @@ class AdminScreen extends StatelessWidget {
           drawer: Drawer(
             child: ListView(
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image(
+                    image: AssetImage(
+                      'assets/dyv_logo.png',
+                    ),
+                    height: 96,
+                  ),
+                ),
                 MaterialButton(
                   padding: EdgeInsets.all(32),
-                  child: Text("Πωλήσεις"),
+                  child: Text(
+                    "Πωλήσεις",
+                    style: TextStyle(
+                      fontSize: Get.theme.textTheme.bodyLarge?.fontSize,
+                    ),
+                  ),
                   onPressed: () {
                     _controller.index.value = "0";
                   },
                 ),
                 MaterialButton(
                   padding: EdgeInsets.all(32),
-                  child: Text("Προϊόντα"),
+                  child: Text(
+                    "Προϊόντα",
+                    style: TextStyle(
+                      fontSize: Get.theme.textTheme.bodyLarge?.fontSize,
+                    ),
+                  ),
                   onPressed: () {
                     _controller.index.value = "1";
                   },
