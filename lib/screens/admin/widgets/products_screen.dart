@@ -245,7 +245,6 @@ class ProductTable extends StatelessWidget {
                       : b.availableAmount!.compareTo(a.availableAmount!);
                 }
               });
-
             },
           ),
           DataColumn(
