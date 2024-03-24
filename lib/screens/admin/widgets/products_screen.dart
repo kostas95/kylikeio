@@ -231,15 +231,21 @@ class ProductTable extends StatelessWidget {
             onSort: (columnIndex, ascending) {
               _sortColumnIndex.value = columnIndex;
               _sortAscending.value = ascending;
-              _controller.products.sort(
-                    (a, b) {
-                  if (ascending) {
-                    return a.availableAmount!.compareTo(b.availableAmount!);
-                  } else {
-                    return b.availableAmount!.compareTo(a.availableAmount!);
-                  }
-                },
-              );
+              _controller.products.sort((a, b) {
+                if (a.availableAmount == null && b.availableAmount == null) {
+                  return 0; // Both values are null, consider them equal
+                } else if (a.availableAmount == null) {
+                  return ascending ? 1 : -1; // Null values come last when sorting in ascending order, first when sorting in descending order
+                } else if (b.availableAmount == null) {
+                  return ascending ? -1 : 1; // Null values come first when sorting in ascending order, last when sorting in descending order
+                } else {
+                  // Both values are not null, perform normal comparison
+                  return ascending
+                      ? a.availableAmount!.compareTo(b.availableAmount!)
+                      : b.availableAmount!.compareTo(a.availableAmount!);
+                }
+              });
+
             },
           ),
           DataColumn(
