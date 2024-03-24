@@ -4,6 +4,7 @@ class Product {
   String? category;
   double? price;
   String? notes;
+  int? availableAmount;
 
   Product();
 
@@ -13,6 +14,7 @@ class Product {
     this.category = data["category"];
     this.price = data["price"];
     this.notes = data["notes"];
+    this.availableAmount = data["amountAvailable"];
   }
 
   Map<String, dynamic> toMap() => {
@@ -20,10 +22,11 @@ class Product {
         "price": this.price,
         "category": this.category,
         "notes": this.notes,
+        "amountAvailable": this.availableAmount,
       };
 
   @override
   String toString() {
-    return 'Product{id: $id, name: $name, category: $category, price: $price, notes: $notes}';
+    return 'Product{id: $id, name: $name, category: $category, price: $price, notes: $notes, amountAvailable: $availableAmount}';
   }
 }

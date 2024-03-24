@@ -7,12 +7,18 @@ import 'package:kylikeio/repository/sells_repository.dart';
 class SalesScreenController extends GetxController {
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxList<ProductSold> productsSold = <ProductSold>[].obs;
+  final RxString categoryFilter = "Καφέδες - Ροφήματα".obs;
 
   @override
   void onInit() async {
     await getSells();
     selectedDate.stream.listen((event) async {
       await getSells();
+      productsSold.retainWhere((p) => p.category == categoryFilter.value);
+    });
+    categoryFilter.stream.listen((event) async {
+      await getSells();
+      productsSold.retainWhere((p) => p.category == event);
     });
     super.onInit();
   }
@@ -53,32 +59,60 @@ class SalesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(
           margin: EdgeInsets.all(
             32,
           ),
-          child: MaterialButton(
-            padding: EdgeInsets.all(16),
-            color: Get.theme.primaryColor.withOpacity(0.7),
-            child: Text(
-              DateFormat.yMMMd().format(_controller.selectedDate.value),
-              style: TextStyle(
-                color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(
+                () => DropdownButton(
+                  hint: Text("Κατηγορία"),
+                  isExpanded: false,
+                  underline: Container(),
+                  value: _controller.categoryFilter.value,
+                  onChanged: (String? v) {
+                    _controller.categoryFilter.value = v!;
+                  },
+                  items: [
+                    "Καφέδες - Ροφήματα",
+                    "Σφολιάτες - Σάντουιτς",
+                    "Αναψυκτικά",
+                    "Chips - Snacks",
+                  ].map(
+                    (String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    },
+                  ).toList(),
+                ),
               ),
-            ),
-            onPressed: () async {
-              DateTime? d = await showDatePicker(
-                context: context,
-                firstDate: DateTime(2019, 1, 1),
-                lastDate: DateTime.now(),
-              );
+              MaterialButton(
+                padding: EdgeInsets.all(16),
+                color: Get.theme.primaryColor.withOpacity(0.7),
+                child: Text(
+                  DateFormat.yMMMd().format(_controller.selectedDate.value),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () async {
+                  DateTime? d = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(2019, 1, 1),
+                    lastDate: DateTime.now(),
+                  );
 
-              if (d != null) {
-                _controller.selectedDate.value = d;
-              }
-            },
+                  if (d != null) {
+                    _controller.selectedDate.value = d;
+                  }
+                },
+              ),
+            ],
           ),
         ),
         Expanded(

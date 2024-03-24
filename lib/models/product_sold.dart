@@ -3,6 +3,7 @@ import 'product.dart';
 class ProductSold extends Product {
   int? quantity;
   DateTime? date;
+  String? productId;
 
   ProductSold();
 
@@ -13,6 +14,9 @@ class ProductSold extends Product {
 
   ProductSold.fromMap(String id, dynamic data) {
     this.id = id;
+    // Id of the product that was sold
+    this.productId = data["productId"];
+    // Name of the product that was sold
     this.name = data["name"];
     this.quantity = data["quantity"];
     this.date = DateTime.parse(data["date"]);
@@ -22,6 +26,7 @@ class ProductSold extends Product {
   }
 
   Map<String, dynamic> toMap() => {
+        "productId": this.productId,
         "name": this.name,
         "quantity": this.quantity,
         "date": this.date?.toIso8601String(),
@@ -32,6 +37,6 @@ class ProductSold extends Product {
 
   @override
   String toString() {
-    return 'ProductSold{quantity: $quantity, date: $date}';
+    return 'ProductSold{quantity: $quantity, date: $date, productId: $productId}';
   }
 }

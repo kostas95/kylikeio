@@ -128,6 +128,35 @@ class ProductDialog extends StatelessWidget {
                 child: ListTile(
                   title: TextFormField(
                     controller: TextEditingController(
+                      text: product.availableAmount != null ? product.availableAmount.toString() : "",
+                    ),
+                    onChanged: (v) {
+                      product.availableAmount = int.tryParse(v);
+                    },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r"[0-9]"),
+                      ),
+                      TextInputFormatter.withFunction(
+                        (oldValue, newValue) {
+                          final text = newValue.text;
+                          return text.isEmpty
+                              ? newValue
+                              : int.tryParse(text) == null
+                                  ? oldValue
+                                  : newValue;
+                        },
+                      ),
+                    ],
+                  ),
+                  subtitle: Text("Απόθεμα"),
+                ),
+              ),
+              SizedBox(
+                width: 512,
+                child: ListTile(
+                  title: TextFormField(
+                    controller: TextEditingController(
                       text: product.notes,
                     ),
                     onChanged: (v) {

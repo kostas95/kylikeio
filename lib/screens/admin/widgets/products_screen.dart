@@ -6,10 +6,15 @@ import 'package:kylikeio/screens/admin/widgets/product_dialog.dart';
 
 class ProductsScreenController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
+  final RxString categoryFilter = "Καφέδες - Ροφήματα".obs;
 
   @override
   void onInit() async {
     products.addAll(await getProducts());
+    categoryFilter.stream.listen((event) async {
+      products.addAll(await getProducts());
+      products.retainWhere((p) => p.category == event);
+    });
 
     super.onInit();
   }
@@ -78,32 +83,61 @@ class ProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.max,
       children: [
         Container(
           margin: EdgeInsets.all(32),
-          child: MaterialButton(
-            hoverElevation: 0,
-            elevation: 0,
-            padding: EdgeInsets.all(16),
-            color: Get.theme.primaryColor.withOpacity(0.7),
-            child: Text(
-              "Προσθήκη Προϊόντος",
-              style: TextStyle(
-                color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(
+                () => DropdownButton(
+                  hint: Text("Κατηγορία"),
+                  isExpanded: false,
+                  underline: Container(),
+                  value: _controller.categoryFilter.value,
+                  onChanged: (String? v) {
+                    _controller.categoryFilter.value = v!;
+                  },
+                  items: [
+                    "Καφέδες - Ροφήματα",
+                    "Σφολιάτες - Σάντουιτς",
+                    "Αναψυκτικά",
+                    "Chips - Snacks",
+                  ].map(
+                    (String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    },
+                  ).toList(),
+                ),
               ),
-            ),
-            onPressed: () {
-              // Open dialog when button is pressed
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  Product p = Product();
-                  p.category = "Καφέδες - Ροφήματα";
-                  return ProductDialog(product: p);
+              MaterialButton(
+                hoverElevation: 0,
+                elevation: 0,
+                padding: EdgeInsets.all(16),
+                color: Get.theme.primaryColor.withOpacity(0.7),
+                child: Text(
+                  "Προσθήκη Προϊόντος",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  // Open dialog when button is pressed
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      Product p = Product();
+                      p.category = "Καφέδες - Ροφήματα";
+                      return ProductDialog(product: p);
+                    },
+                  );
                 },
-              );
-            },
+              ),
+            ],
           ),
         ),
         Expanded(
@@ -155,7 +189,9 @@ class ProductTable extends StatelessWidget {
             },
           ),
           DataColumn(
-            label: Flexible(child: Text('Κατηγορία')),
+            label: Flexible(
+              child: Text('Κατηγορία'),
+            ),
             onSort: (columnIndex, ascending) {
               _sortColumnIndex.value = columnIndex;
               _sortAscending.value = ascending;
@@ -171,7 +207,9 @@ class ProductTable extends StatelessWidget {
             },
           ),
           DataColumn(
-            label: Flexible(child: Text('Τιμή')),
+            label: Flexible(
+              child: Text('Τιμή'),
+            ),
             onSort: (columnIndex, ascending) {
               _sortColumnIndex.value = columnIndex;
               _sortAscending.value = ascending;
@@ -187,7 +225,27 @@ class ProductTable extends StatelessWidget {
             },
           ),
           DataColumn(
-            label: Flexible(child: Text('Σημειώσεις')),
+            label: Flexible(
+              child: Text('Απόθεμα'),
+            ),
+            onSort: (columnIndex, ascending) {
+              _sortColumnIndex.value = columnIndex;
+              _sortAscending.value = ascending;
+              _controller.products.sort(
+                    (a, b) {
+                  if (ascending) {
+                    return a.availableAmount!.compareTo(b.availableAmount!);
+                  } else {
+                    return b.availableAmount!.compareTo(a.availableAmount!);
+                  }
+                },
+              );
+            },
+          ),
+          DataColumn(
+            label: Flexible(
+              child: Text('Σημειώσεις'),
+            ),
           ),
           DataColumn(
             label: Text(''),
@@ -215,6 +273,9 @@ class ProductTable extends StatelessWidget {
               ),
               DataCell(
                 Text(product.price?.toString() ?? ''),
+              ),
+              DataCell(
+                Text(product.availableAmount?.toString() ?? ''),
               ),
               DataCell(
                 Text(product.notes ?? ''),
