@@ -5,8 +5,6 @@ import 'package:kylikeio/models/product.dart';
 import 'package:kylikeio/repository/products_repository.dart';
 import 'package:kylikeio/screens/admin/widgets/product_dialog.dart';
 import 'package:kylikeio/widgets/pdf_widget.dart';
-import 'package:pdf/pdf.dart';
-import 'package:printing/printing.dart';
 
 class ProductsScreenController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
