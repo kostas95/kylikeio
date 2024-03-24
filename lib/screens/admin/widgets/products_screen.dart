@@ -5,33 +5,38 @@ import 'package:kylikeio/repository/products_repository.dart';
 import 'package:kylikeio/screens/admin/widgets/product_dialog.dart';
 
 class ProductsScreenController extends GetxController {
-  final List<Product> products = [];
+  final RxList<Product> products = <Product>[].obs;
 
   @override
   void onInit() async {
-    products.addAll(generateDummyProducts());
-    await getProducts();
+    products.addAll(await getProducts());
 
     super.onInit();
   }
 
-  Future getProducts() async {
-    await ProductsRepository().getProducts();
+  Future<List<Product>> getProducts() async {
+    return await ProductsRepository().getProducts();
   }
 
   Future addProduct(Product p) async {
     if (p.name != null && p.price != null) {
       await ProductsRepository().addProduct(p);
+      products.insert(0, p);
     }
   }
 
   Future editProduct(Product p) async {
     if (p.name != null && p.price != null) {
+      int index = products.indexWhere((product) => product.id == p.id);
+      products.removeAt(index);
+      products.insert(index, p);
       await ProductsRepository().editProduct(p);
     }
   }
 
   Future deleteProduct(String id) async {
+    products.removeWhere((product) => product.id == id);
+    products.refresh();
     await ProductsRepository().deleteProduct(id);
   }
 
@@ -118,71 +123,116 @@ class ProductsScreen extends StatelessWidget {
 class ProductTable extends StatelessWidget {
   final List<Product> products;
   final ProductsScreenController _controller = Get.find<ProductsScreenController>();
+  final RxBool _sortAscending = false.obs;
+  final RxInt _sortColumnIndex = 0.obs;
 
   ProductTable({required this.products});
 
   @override
   Widget build(BuildContext context) {
-    return DataTable(
-      showCheckboxColumn: false,
-      columnSpacing: Get.width / 5,
-      columns: [
-        DataColumn(
-          label: Text('Όνομα'),
-        ),
-        DataColumn(
-          label: Text('Κατηγορία'),
-        ),
-        DataColumn(
-          label: Text('Τιμή'),
-        ),
-        DataColumn(
-          label: Text('Σημειώσεις'),
-        ),
-        DataColumn(
-          label: Text(''),
-        ),
-      ],
-      rows: products.map((product) {
-        return DataRow(
-          onSelectChanged: (v) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return ProductDialog(
-                  product: product,
-                  editMode: true,
-                );
-              },
-            );
-          },
-          cells: [
-            DataCell(
-              Text(product.name ?? ''),
-            ),
-            DataCell(
-              Text(product.category ?? ''),
-            ),
-            DataCell(
-              Text(product.price?.toString() ?? ''),
-            ),
-            DataCell(
-              Text(product.notes ?? ''),
-            ),
-            DataCell(
-              IconButton(
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-                onPressed: () async {
-                  if (product.id != null) await _controller.deleteProduct(product.id!);
+    return Obx(
+      () => DataTable(
+        sortColumnIndex: _sortColumnIndex.value,
+        sortAscending: _sortAscending.value,
+        showCheckboxColumn: false,
+        columnSpacing: Get.mediaQuery.size.width < 1600 ? Get.width / 10 : Get.width / 5,
+        columns: [
+          DataColumn(
+            label: Flexible(child: Text('Όνομα')),
+            onSort: (columnIndex, ascending) {
+              _sortColumnIndex.value = columnIndex;
+              _sortAscending.value = ascending;
+              _controller.products.sort(
+                (a, b) {
+                  if (ascending) {
+                    return a.name!.compareTo(b.name!);
+                  } else {
+                    return b.name!.compareTo(a.name!);
+                  }
                 },
+              );
+            },
+          ),
+          DataColumn(
+            label: Flexible(child: Text('Κατηγορία')),
+            onSort: (columnIndex, ascending) {
+              _sortColumnIndex.value = columnIndex;
+              _sortAscending.value = ascending;
+              _controller.products.sort(
+                    (a, b) {
+                  if (ascending) {
+                    return a.category!.compareTo(b.category!);
+                  } else {
+                    return b.category!.compareTo(a.category!);
+                  }
+                },
+              );
+            },
+          ),
+          DataColumn(
+            label: Flexible(child: Text('Τιμή')),
+            onSort: (columnIndex, ascending) {
+              _sortColumnIndex.value = columnIndex;
+              _sortAscending.value = ascending;
+              _controller.products.sort(
+                    (a, b) {
+                  if (ascending) {
+                    return a.price!.compareTo(b.price!);
+                  } else {
+                    return b.price!.compareTo(a.price!);
+                  }
+                },
+              );
+            },
+          ),
+          DataColumn(
+            label: Flexible(child: Text('Σημειώσεις')),
+          ),
+          DataColumn(
+            label: Text(''),
+          ),
+        ],
+        rows: products.map((product) {
+          return DataRow(
+            onSelectChanged: (v) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return ProductDialog(
+                    product: product,
+                    editMode: true,
+                  );
+                },
+              );
+            },
+            cells: [
+              DataCell(
+                Text(product.name ?? ''),
               ),
-            ),
-          ],
-        );
-      }).toList(),
+              DataCell(
+                Text(product.category ?? ''),
+              ),
+              DataCell(
+                Text(product.price?.toString() ?? ''),
+              ),
+              DataCell(
+                Text(product.notes ?? ''),
+              ),
+              DataCell(
+                IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onPressed: () async {
+                    if (product.id != null) await _controller.deleteProduct(product.id!);
+                  },
+                ),
+              ),
+            ],
+          );
+        }).toList(),
+      ),
     );
   }
 }

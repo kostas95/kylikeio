@@ -24,7 +24,24 @@ class ProductDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: EdgeInsets.all(4),
-      title: Text('Προσθήκη Προϊόντος'),
+      title: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Προσθήκη Προϊόντος'),
+          IconButton(
+            icon: Icon(
+              Icons.close,
+              color: Colors.grey,
+            ),
+            padding: EdgeInsets.all(16),
+            color: Colors.transparent,
+            onPressed: () {
+              Get.back();
+            },
+          )
+        ],
+      ),
       content: Padding(
         padding: const EdgeInsets.only(bottom: 16.0),
         child: Form(
@@ -146,16 +163,23 @@ class ProductDialog extends StatelessWidget {
             ),
           ),
         ),
-        MaterialButton(
-          hoverElevation: 0,
-          elevation: 0,
-          padding: EdgeInsets.all(16),
-          color: Colors.transparent,
-          onPressed: () {
-            Get.back();
-          },
-          child: Text('Κλείσιμο'),
-        ),
+        if (product.id != null && editMode)
+          MaterialButton(
+            hoverElevation: 0,
+            elevation: 0,
+            padding: EdgeInsets.all(16),
+            color: Colors.red,
+            onPressed: () async {
+              Get.back();
+              await _controller.deleteProduct(product.id!);
+            },
+            child: Text(
+              'Διαγραφή',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
       ],
     );
   }
