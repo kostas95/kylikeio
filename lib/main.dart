@@ -36,10 +36,12 @@ class WebApp extends StatelessWidget {
         GetPage(
           name: '/',
           page: () => const MainScreen(),
+          transition: Transition.noTransition,
         ),
         GetPage(
           name: '/admin',
           page: () => const AdminScreen(),
+          transition: Transition.noTransition,
         ),
       ],
       theme: ThemeData(
