@@ -18,7 +18,7 @@ class ProductsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          ProductCategories.coffee,
+          title,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: Get.theme.textTheme.bodyLarge?.fontSize,

@@ -24,7 +24,7 @@ class PDF {
       return Header(
         child: Center(
           child: Text(
-            "ΤΙΜΟΚΑΤΑΛΟΓΟΣ",
+            documentTitle,
             style: TextStyle(
               fontSize: Get.textTheme.headlineMedium?.fontSize,
             ),

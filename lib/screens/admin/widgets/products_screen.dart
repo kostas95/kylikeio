@@ -131,7 +131,7 @@ class ProductsScreen extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await PDF.exportPdf(
-                        documentTitle: "test",
+                        documentTitle: "ΤΙΜΟΚΑΤΑΛΟΓΟΣ",
                         products: _controller.products,
                       );
                     },
