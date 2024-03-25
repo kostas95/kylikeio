@@ -207,7 +207,12 @@ class ProductTable extends StatelessWidget {
         columns: [
           DataColumn(
             label: Flexible(
-              child: Text(''),
+              child: Text(
+                'Σύνολο: ${products.length}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
           DataColumn(
