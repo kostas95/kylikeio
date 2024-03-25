@@ -8,27 +8,31 @@ import 'package:kylikeio/repository/sells_repository.dart';
 class SalesScreenController extends GetxController {
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxList<ProductSold> productsSold = <ProductSold>[].obs;
-  final RxString categoryFilter = ProductCategories.coffee.obs;
+  final RxString categoryFilter = ProductCategories.all.obs;
 
   @override
   void onInit() async {
     await getSells();
     selectedDate.stream.listen((event) async {
       await getSells();
-      productsSold.retainWhere((p) => p.category == categoryFilter.value);
+      if (categoryFilter.value != ProductCategories.all) productsSold.retainWhere((p) => p.category == categoryFilter.value);
     });
     categoryFilter.stream.listen((event) async {
       await getSells();
-      productsSold.retainWhere((p) => p.category == event);
+      if (event != ProductCategories.all) productsSold.retainWhere((p) => p.category == event);
     });
     super.onInit();
   }
 
   Future getSells() async {
+    productsSold.clear();
     productsSold.assignAll(
       await SellsRepository().getSells(
         selectedDate.value,
       ),
+    );
+    productsSold.sort(
+          (a, b) => a.date!.compareTo(b.date!),
     );
   }
 
@@ -78,6 +82,7 @@ class SalesScreen extends StatelessWidget {
                     _controller.categoryFilter.value = v!;
                   },
                   items: [
+                    ProductCategories.all,
                     ProductCategories.coffee,
                     ProductCategories.sandwich,
                     ProductCategories.drinks,

@@ -1,4 +1,5 @@
 class ProductCategories {
+  static final String all = "Όλα";
   static final String coffee = "Καφέδες - Ροφήματα";
   static final String sandwich = "Σφολιάτες - Σάντουιτς";
   static final String drinks = "Αναψυκτικά";

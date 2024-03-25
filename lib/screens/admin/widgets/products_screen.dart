@@ -8,21 +8,26 @@ import 'package:kylikeio/widgets/pdf_widget.dart';
 
 class ProductsScreenController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
-  final RxString categoryFilter = ProductCategories.coffee.obs;
+  final RxString categoryFilter = ProductCategories.all.obs;
 
   @override
   void onInit() async {
     products.addAll(await getProducts());
     categoryFilter.stream.listen((event) async {
       products.addAll(await getProducts());
-      products.retainWhere((p) => p.category == event);
+      if (event != ProductCategories.all) products.retainWhere((p) => p.category == event);
     });
 
     super.onInit();
   }
 
   Future<List<Product>> getProducts() async {
-    return await ProductsRepository().getProducts();
+    products.clear();
+    List<Product> p = await ProductsRepository().getProducts();
+    p.sort(
+      (a, b) => a.name!.compareTo(b.name!),
+    );
+    return p;
   }
 
   Future addProduct(Product p) async {
@@ -102,6 +107,7 @@ class ProductsScreen extends StatelessWidget {
                     _controller.categoryFilter.value = v!;
                   },
                   items: [
+                    ProductCategories.all,
                     ProductCategories.coffee,
                     ProductCategories.sandwich,
                     ProductCategories.drinks,
