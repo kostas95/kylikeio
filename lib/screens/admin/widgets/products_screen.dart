@@ -21,8 +21,10 @@ class ProductsScreenController extends GetxController {
     super.onInit();
   }
 
-  Future<List<Product>> getProducts() async {
-    products.clear();
+  Future<List<Product>> getProducts({bool forPdf = false}) async {
+    if (!forPdf) {
+      products.clear();
+    }
     List<Product> p = await ProductsRepository().getProducts();
     p.sort(
       (a, b) => a.name!.compareTo(b.name!),
@@ -136,9 +138,10 @@ class ProductsScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () async {
+                      final List<Product> products = await _controller.getProducts(forPdf: true);
                       await PDF.exportPdf(
                         documentTitle: "ΤΙΜΟΚΑΤΑΛΟΓΟΣ",
-                        products: _controller.products,
+                        products: products,
                       );
                     },
                   ),

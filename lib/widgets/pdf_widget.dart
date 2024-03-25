@@ -26,7 +26,7 @@ class PDF {
           child: Text(
             documentTitle,
             style: TextStyle(
-              fontSize: Get.textTheme.headlineMedium?.fontSize,
+              fontSize: Get.textTheme.headlineSmall?.fontSize,
             ),
           ),
         ),
