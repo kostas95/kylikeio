@@ -44,70 +44,63 @@ class PDF {
 
     pdf.addPage(
       MultiPage(
-        theme: ThemeData.withFont(
-          base: Font.ttf(await rootBundle.load("assets/pdf-assets/fonts/open-sans/OpenSans-Regular.ttf")),
-          bold: Font.ttf(await rootBundle.load("assets/pdf-assets/fonts/open-sans/OpenSans-Bold.ttf")),
-          italic: Font.ttf(await rootBundle.load("assets/pdf-assets/fonts/open-sans/OpenSans-Italic.ttf")),
-          icons: Font.ttf(await rootBundle.load('assets/pdf-assets/material.ttf')),
-        ),
-        orientation: PageOrientation.portrait,
         header: buildHeader,
         footer: buildFooter,
-        maxPages: 10,
-        build: (Context context) => <Widget>[
-          Stack(
-            children: [
-              Opacity(
-                opacity: 0.2,
-                child: Container(
-                  width: 600,
-                  height: 600,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(image: logo),
-                  ),
-                  child: Container(),
+        pageTheme: PageTheme(
+          theme: ThemeData.withFont(
+            base: Font.ttf(await rootBundle.load("assets/pdf-assets/fonts/open-sans/OpenSans-Regular.ttf")),
+            bold: Font.ttf(await rootBundle.load("assets/pdf-assets/fonts/open-sans/OpenSans-Bold.ttf")),
+            italic: Font.ttf(await rootBundle.load("assets/pdf-assets/fonts/open-sans/OpenSans-Italic.ttf")),
+            icons: Font.ttf(await rootBundle.load('assets/pdf-assets/material.ttf')),
+          ),
+          buildBackground: (Context c) => Opacity(
+            opacity: 0.2,
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: logo,
+                    fit: BoxFit.contain
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 4),
-                    alignment: Alignment.center,
-                    child: ProductsSection(
-                      products: products.where((e) => e.category == ProductCategories.coffee && e.active).toList(),
-                      title: ProductCategories.coffee,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 4),
-                    alignment: Alignment.center,
-                    child: ProductsSection(
-                      products: products.where((e) => e.category == ProductCategories.sandwich && e.active).toList(),
-                      title: ProductCategories.sandwich,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 4),
-                    alignment: Alignment.center,
-                    child: ProductsSection(
-                      products: products.where((e) => e.category == ProductCategories.drinks && e.active).toList(),
-                      title: ProductCategories.drinks,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 4),
-                    alignment: Alignment.center,
-                    child: ProductsSection(
-                      products: products.where((e) => e.category == ProductCategories.snacks && e.active).toList(),
-                      title: ProductCategories.snacks,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          )
+              child: Container(),
+            ),
+          ),
+        ),
+        maxPages: 10,
+        build: (Context context) => <Widget>[
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 4),
+            alignment: Alignment.center,
+            child: ProductsSection(
+              products: products.where((e) => e.category == ProductCategories.coffee && e.active).toList(),
+              title: ProductCategories.coffee,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 4),
+            alignment: Alignment.center,
+            child: ProductsSection(
+              products: products.where((e) => e.category == ProductCategories.sandwich && e.active).toList(),
+              title: ProductCategories.sandwich,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 4),
+            alignment: Alignment.center,
+            child: ProductsSection(
+              products: products.where((e) => e.category == ProductCategories.drinks && e.active).toList(),
+              title: ProductCategories.drinks,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 4),
+            alignment: Alignment.center,
+            child: ProductsSection(
+              products: products.where((e) => e.category == ProductCategories.snacks && e.active).toList(),
+              title: ProductCategories.snacks,
+            ),
+          ),
         ],
       ),
     );
