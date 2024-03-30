@@ -172,11 +172,27 @@ class MainScreen extends StatelessWidget {
                                           },
                                           color: Get.theme.primaryColor.withOpacity(0.6),
                                           child: Center(
-                                            child: Text(
-                                              p.name ?? "Άγνωστο προϊόν",
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                              ),
+                                            child: Wrap(
+                                              alignment: WrapAlignment.center,
+                                              children: [
+                                                Text(
+                                                  p.name ?? "Άγνωστο προϊόν",
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                if (p.price != null)
+                                                  SizedBox(
+                                                    width: 4,
+                                                  ),
+                                                if (p.price != null)
+                                                  Text(
+                                                  "(" + p.price!.toStringAsFixed(2) + ")",
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  )
+                                              ],
                                             ),
                                           ),
                                         ),
