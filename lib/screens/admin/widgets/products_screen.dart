@@ -91,101 +91,103 @@ class ProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Container(
-          margin: EdgeInsets.all(32),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Obx(
-                () => DropdownButton(
-                  hint: Text("Κατηγορία"),
-                  isExpanded: false,
-                  underline: Container(),
-                  value: _controller.categoryFilter.value,
-                  onChanged: (String? v) {
-                    _controller.categoryFilter.value = v!;
-                  },
-                  items: [
-                    ProductCategories.all,
-                    ProductCategories.coffee,
-                    ProductCategories.sandwich,
-                    ProductCategories.drinks,
-                    ProductCategories.snacks,
-                  ].map(
-                    (String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
+    return SelectionArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            margin: EdgeInsets.all(32),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Obx(
+                  () => DropdownButton(
+                    hint: Text("Κατηγορία"),
+                    isExpanded: false,
+                    underline: Container(),
+                    value: _controller.categoryFilter.value,
+                    onChanged: (String? v) {
+                      _controller.categoryFilter.value = v!;
                     },
-                  ).toList(),
+                    items: [
+                      ProductCategories.all,
+                      ProductCategories.coffee,
+                      ProductCategories.sandwich,
+                      ProductCategories.drinks,
+                      ProductCategories.snacks,
+                    ].map(
+                      (String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      },
+                    ).toList(),
+                  ),
                 ),
-              ),
-              Wrap(
-                children: [
-                  MaterialButton(
-                    hoverElevation: 0,
-                    elevation: 0,
-                    padding: EdgeInsets.all(16),
-                    color: Get.theme.primaryColor.withOpacity(0.7),
-                    child: Text(
-                      "Εξαγωγή Τιμοκαταλόγου",
-                      style: TextStyle(
-                        color: Colors.white,
+                Wrap(
+                  children: [
+                    MaterialButton(
+                      hoverElevation: 0,
+                      elevation: 0,
+                      padding: EdgeInsets.all(16),
+                      color: Get.theme.primaryColor.withOpacity(0.7),
+                      child: Text(
+                        "Εξαγωγή Τιμοκαταλόγου",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
+                      onPressed: () async {
+                        final List<Product> products = await _controller.getProducts(forPdf: true);
+                        await PDF.exportPdf(
+                          documentTitle: "ΤΙΜΟΚΑΤΑΛΟΓΟΣ",
+                          products: products,
+                        );
+                      },
                     ),
-                    onPressed: () async {
-                      final List<Product> products = await _controller.getProducts(forPdf: true);
-                      await PDF.exportPdf(
-                        documentTitle: "ΤΙΜΟΚΑΤΑΛΟΓΟΣ",
-                        products: products,
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  MaterialButton(
-                    hoverElevation: 0,
-                    elevation: 0,
-                    padding: EdgeInsets.all(16),
-                    color: Get.theme.primaryColor.withOpacity(0.7),
-                    child: Text(
-                      "Προσθήκη Προϊόντος",
-                      style: TextStyle(
-                        color: Colors.white,
+                    SizedBox(
+                      width: 4,
+                    ),
+                    MaterialButton(
+                      hoverElevation: 0,
+                      elevation: 0,
+                      padding: EdgeInsets.all(16),
+                      color: Get.theme.primaryColor.withOpacity(0.7),
+                      child: Text(
+                        "Προσθήκη Προϊόντος",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
+                      onPressed: () {
+                        // Open dialog when button is pressed
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            Product p = Product();
+                            p.category = ProductCategories.coffee;
+                            return ProductDialog(product: p);
+                          },
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      // Open dialog when button is pressed
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          Product p = Product();
-                          p.category = ProductCategories.coffee;
-                          return ProductDialog(product: p);
-                        },
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: ListView(
-            children: [
-              ProductTable(
-                products: _controller.products,
-              ),
-            ],
+          Expanded(
+            child: ListView(
+              children: [
+                ProductTable(
+                  products: _controller.products,
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

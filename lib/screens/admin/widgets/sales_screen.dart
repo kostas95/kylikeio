@@ -1,3 +1,4 @@
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +16,8 @@ class SalesScreenController extends GetxController {
     await getSells();
     selectedDate.stream.listen((event) async {
       await getSells();
-      if (categoryFilter.value != ProductCategories.all) productsSold.retainWhere((p) => p.category == categoryFilter.value);
+      if (categoryFilter.value != ProductCategories.all)
+        productsSold.retainWhere((p) => p.category == categoryFilter.value);
     });
     categoryFilter.stream.listen((event) async {
       await getSells();
@@ -32,7 +34,7 @@ class SalesScreenController extends GetxController {
       ),
     );
     productsSold.sort(
-          (a, b) => a.date!.compareTo(b.date!),
+      (a, b) => a.date!.compareTo(b.date!),
     );
   }
 
@@ -53,6 +55,94 @@ class SalesScreenController extends GetxController {
 
     return total;
   }
+
+  void exportToExcel({
+    required BuildContext context,
+    required List<ProductSold> products,
+    required int totalQuantity,
+    required double totalIncome,
+    required DateTime selectedDate,
+  }) {
+    // Create a new Excel workbook
+    var excel = Excel.createExcel();
+
+    // Add a sheet to the workbook
+    var sheet = excel['Sheet1'];
+
+    if (sheet.rows.isNotEmpty)
+      sheet.rows.first.forEach(
+        (e) {
+          if (e != null)
+            sheet.setColumnWidth(
+              e.columnIndex,
+              1000,
+            );
+        },
+      );
+
+    CellStyle cellStyle = CellStyle(
+      bold: true,
+      fontFamily: getFontFamily(FontFamily.Arial),
+      rotation: 0,
+    );
+
+    // Add columns to the sheet
+    sheet.appendRow(
+      [
+        TextCellValue("Όνομα"),
+        TextCellValue('Κατηγορία'),
+        TextCellValue('Τιμή'),
+        TextCellValue('Ποσότητα'),
+        TextCellValue('Έσοδα'),
+        TextCellValue('Ημερομηνία'),
+      ],
+    );
+
+    // Add the total row at the beginning
+    sheet.insertRowIterables(
+      [
+        TextCellValue('ΣΥΝΟΛΟ'),
+        TextCellValue(''),
+        TextCellValue(''),
+        IntCellValue(totalQuantity),
+        DoubleCellValue(totalIncome.toPrecision(2)),
+        TextCellValue(
+          DateFormat('d/M/yyyy').format(selectedDate),
+        ),
+      ],
+      1,
+    );
+
+    // Bold for first 2 rows
+    if (sheet.rows.isNotEmpty) {
+      sheet.row(0).forEach((e) => e?.cellStyle = cellStyle);
+      sheet.row(1).forEach((e) => e?.cellStyle = cellStyle);
+    }
+
+    // Add data rows to the sheet
+    products.forEach(
+      (product) {
+        sheet.appendRow(
+          [
+            TextCellValue(product.name ?? ''),
+            TextCellValue(product.category ?? ''),
+            DoubleCellValue(product.price ?? 0),
+            IntCellValue(product.quantity ?? 0),
+            DoubleCellValue(product.getIncome?.toPrecision(2) ?? 0),
+            TextCellValue(
+              DateFormat.Hm().format(product.date ?? DateTime.now()),
+            )
+            // DateTimeCellValue.fromDateTime(
+            //   product.date ?? DateTime.now(),
+            // ),
+          ],
+        );
+      },
+    );
+
+    // Save the workbook
+    excel.save(fileName: '${DateFormat('d/M/yyyy').format(selectedDate)}.xlsx');
+  }
 }
 
 class SalesScreen extends StatelessWidget {
@@ -62,77 +152,109 @@ class SalesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          margin: EdgeInsets.all(
-            32,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Obx(
-                () => DropdownButton(
-                  hint: Text("Κατηγορία"),
-                  isExpanded: false,
-                  underline: Container(),
-                  value: _controller.categoryFilter.value,
-                  onChanged: (String? v) {
-                    _controller.categoryFilter.value = v!;
-                  },
-                  items: [
-                    ProductCategories.all,
-                    ProductCategories.coffee,
-                    ProductCategories.sandwich,
-                    ProductCategories.drinks,
-                    ProductCategories.snacks,
-                  ].map(
-                    (String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
+    return SelectionArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            margin: EdgeInsets.all(
+              32,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Obx(
+                  () => DropdownButton(
+                    hint: Text("Κατηγορία"),
+                    isExpanded: false,
+                    underline: Container(),
+                    value: _controller.categoryFilter.value,
+                    onChanged: (String? v) {
+                      _controller.categoryFilter.value = v!;
                     },
-                  ).toList(),
-                ),
-              ),
-              MaterialButton(
-                padding: EdgeInsets.all(16),
-                color: Get.theme.primaryColor.withOpacity(0.7),
-                child: Text(
-                  DateFormat.yMMMd().format(_controller.selectedDate.value),
-                  style: TextStyle(
-                    color: Colors.white,
+                    items: [
+                      ProductCategories.all,
+                      ProductCategories.coffee,
+                      ProductCategories.sandwich,
+                      ProductCategories.drinks,
+                      ProductCategories.snacks,
+                    ].map(
+                      (String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      },
+                    ).toList(),
                   ),
                 ),
-                onPressed: () async {
-                  DateTime? d = await showDatePicker(
-                    context: context,
-                    firstDate: DateTime(2019, 1, 1),
-                    lastDate: DateTime.now(),
-                  );
-
-                  if (d != null) {
-                    _controller.selectedDate.value = d;
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Card(
-            child: ListView(
-              children: [
-                ProductTable(
-                  products: _controller.productsSold,
+                Row(
+                  children: [
+                    MaterialButton(
+                      hoverElevation: 0,
+                      elevation: 0,
+                      padding: EdgeInsets.all(16),
+                      color: Get.theme.primaryColor.withOpacity(0.7),
+                      child: Text(
+                        'Εξαγωγή Πωλήσεων',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () async {
+                        _controller.exportToExcel(
+                          context: context,
+                          products: _controller.productsSold,
+                          selectedDate: _controller.selectedDate.value,
+                          totalIncome: _controller.calculateDailyTotalIncome(),
+                          totalQuantity: _controller.calculateDailyTotalQuantity(),
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    MaterialButton(
+                      hoverElevation: 0,
+                      elevation: 0,
+                      padding: EdgeInsets.all(16),
+                      color: Get.theme.primaryColor.withOpacity(0.7),
+                      child: Text(
+                        DateFormat.yMMMd().format(_controller.selectedDate.value),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () async {
+                        DateTime? d = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime(2019, 1, 1),
+                          lastDate: DateTime.now(),
+                        );
+      
+                        if (d != null) {
+                          _controller.selectedDate.value = d;
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-        ),
-      ],
+          Expanded(
+            child: Card(
+              child: ListView(
+                children: [
+                  ProductTable(
+                    products: _controller.productsSold,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -267,7 +389,7 @@ class ProductTable extends StatelessWidget {
           return DataRow(
             cells: [
               DataCell(
-                Text(
+                SelectableText(
                   product.name ?? '',
                 ),
               ),
