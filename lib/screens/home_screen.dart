@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kylikeio/models/product.dart';
 import 'package:kylikeio/models/product_sold.dart';
 import 'package:kylikeio/repository/products_repository.dart';
@@ -11,10 +12,12 @@ class MainScreenController extends GetxController {
   final RxInt quantity = 1.obs;
   final RxBool cancelButtonIsVisible = false.obs;
   ProductSold? lastProductSold;
+  final RxList<ProductSold> lastProductsSoldRx = <ProductSold>[].obs;
 
   @override
   void onInit() async {
     products.addAll((await getProducts()).where((prod) => prod.active));
+    lastProductsSoldRx.addAll(await SellsRepository().getLastThreeTransactions());
 
     super.onInit();
   }
@@ -47,17 +50,37 @@ class MainScreenController extends GetxController {
     _resetQuantity();
     _displayCancelButton();
 
-    await SellsRepository().addSell(ps);
+    lastProductSold?.id = await SellsRepository().addSell(ps);
+
+    // if (lastProductSold != null) {
+    //   // We need 3 items in this list
+    //   // If 3 or more, remove the first
+    //   if (lastProductsSoldRx.length >= 3) {
+    //     lastProductsSoldRx.removeAt(0);
+    //   }
+    //   // Add the newly sold product
+    //   lastProductsSoldRx.add(lastProductSold!);
+    // }
+
+    // Update the warehouse
     await ProductsRepository().updateProductAmount(
       productId: ps.productId!,
       amountDifference: ps.quantity!,
     );
+
+    // Get the last 3 transactions
+    lastProductsSoldRx.clear();
+    lastProductsSoldRx.addAll(await SellsRepository().getLastThreeTransactions());
   }
 
   Future cancelLastTransaction() async {
     cancelButtonIsVisible.value = false;
 
     await SellsRepository().deleteLastDocument();
+
+    // Get the last 3 transactions
+    lastProductsSoldRx.clear();
+    lastProductsSoldRx.addAll(await SellsRepository().getLastThreeTransactions());
   }
 
   void _resetQuantity() {
@@ -85,18 +108,73 @@ class MainScreen extends StatelessWidget {
       backgroundColor: Get.theme.primaryColor.withOpacity(0.2),
       persistentFooterAlignment: AlignmentDirectional.center,
       bottomNavigationBar: QuantityButton(),
-      appBar: AppBar(
-        title: const Text('ΚΥΛΙΚΕΙΟ ΔΥΒ'),
-        leading: const Image(
-          image: AssetImage(
-            'assets/dyv_logo.png',
+      drawer: Drawer(
+        width: 350,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  'ΤΕΛΕΥΤΑΙΕΣ ΠΩΛΗΣΕΙΣ',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Divider(),
+              Obx(
+                () => _controller.lastProductsSoldRx.isNotEmpty
+                    ? Column(
+                        children: _controller.lastProductsSoldRx
+                            .map<Widget>(
+                              (p) => ListTile(
+                                title: Text(
+                                  (p.name ?? "-"),
+                                ),
+                                subtitle: p.date != null
+                                    ? Text(
+                                        DateFormat.d().format(p.date!) +
+                                            "/" +
+                                            DateFormat.M().format(p.date!) +
+                                            ", " +
+                                            DateFormat.Hms().format(p.date!),
+                                      )
+                                    : null,
+                                trailing: Text(
+                                  "Ποσότητα: ${p.quantity.toString()}",
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      )
+                    : ListTile(
+                        title: Text(
+                          "Δεν έχουν γίνει πωλήσεις σήμερα",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+              ),
+            ],
           ),
         ),
+      ),
+      appBar: AppBar(
+        title: const Text('ΚΥΛΙΚΕΙΟ ΔΥΒ'),
         centerTitle: true,
         actions: [
-          const Image(
-            image: AssetImage(
-              'assets/depli.gif',
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: const Image(
+              image: AssetImage(
+                'assets/dyv_logo.png',
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: const Image(
+              image: AssetImage(
+                'assets/depli.gif',
+              ),
             ),
           )
         ],
@@ -319,21 +397,26 @@ class QuantityButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Column(
+      padding: EdgeInsets.all(8),
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Center(
-              child: Text("ΠΟΣΟΤΗΤΑ ΠΡΟΪΟΝΤΟΣ"),
+          Container(
+            child: Text(
+              "ΠΟΣΟΤΗΤΑ ΠΡΟΪΟΝΤΟΣ",
+              style: TextStyle(
+                fontSize: Get.textTheme.bodyLarge?.fontSize,
+              ),
             ),
           ),
           SizedBox(
-            width: 250,
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Container(
+            width: 16,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
                 width: 50.0,
                 height: 50.0,
                 child: IconButton(
@@ -345,7 +428,18 @@ class QuantityButton extends StatelessWidget {
                   iconSize: 24.0,
                 ),
               ),
-              trailing: Container(
+              Obx(
+                () => Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    _controller.quantity.value.toString(),
+                    style: TextStyle(
+                      fontSize: Get.textTheme.bodyLarge?.fontSize,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
                 width: 50.0,
                 height: 50.0,
                 child: IconButton(
@@ -356,15 +450,8 @@ class QuantityButton extends StatelessWidget {
                   icon: Icon(Icons.remove),
                   iconSize: 24.0,
                 ),
-              ),
-              title: Obx(
-                () => Center(
-                  child: Text(
-                    _controller.quantity.value.toString(),
-                  ),
-                ),
-              ),
-            ),
+              )
+            ],
           )
         ],
       ),
