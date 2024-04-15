@@ -9,7 +9,7 @@ import 'package:kylikeio/repository/sells_repository.dart';
 class MainScreenController extends GetxController {
   final RxList<Product> products = <Product>[].obs;
   final RxInt quantity = 1.obs;
-  RxBool cancelButtonIsVisible = false.obs;
+  final RxBool cancelButtonIsVisible = false.obs;
   ProductSold? lastProductSold;
 
   @override
@@ -83,7 +83,8 @@ class MainScreen extends StatelessWidget {
     MainScreenController _controller = Get.put<MainScreenController>(MainScreenController());
     return Scaffold(
       backgroundColor: Get.theme.primaryColor.withOpacity(0.2),
-      floatingActionButton: QuantityButton(),
+      persistentFooterAlignment: AlignmentDirectional.center,
+      bottomNavigationBar: QuantityButton(),
       appBar: AppBar(
         title: const Text('ΚΥΛΙΚΕΙΟ ΔΥΒ'),
         leading: const Image(
@@ -317,59 +318,54 @@ class QuantityButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Get.theme.primaryColor,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(16),
-        ),
-      ),
-      width: 250,
+      color: Colors.white,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ListTile(
+            contentPadding: EdgeInsets.zero,
             title: Center(
               child: Text("ΠΟΣΟΤΗΤΑ ΠΡΟΪΟΝΤΟΣ"),
             ),
           ),
-          ListTile(
-            leading: Container(
-              width: 50.0,
-              height: 50.0,
-              child: IconButton(
-                onPressed: () {
-                  _controller.increaseQuantity();
-                },
-                color: Get.theme.primaryColor,
-                icon: Icon(Icons.add),
-                iconSize: 24.0,
+          SizedBox(
+            width: 250,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Container(
+                width: 50.0,
+                height: 50.0,
+                child: IconButton(
+                  onPressed: () {
+                    _controller.increaseQuantity();
+                  },
+                  color: Get.theme.primaryColor,
+                  icon: Icon(Icons.add),
+                  iconSize: 24.0,
+                ),
               ),
-            ),
-            trailing: Container(
-              width: 50.0,
-              height: 50.0,
-              child: IconButton(
-                onPressed: () {
-                  _controller.decreaseQuantity();
-                },
-                color: Get.theme.primaryColor,
-                icon: Icon(Icons.remove),
-                iconSize: 24.0,
+              trailing: Container(
+                width: 50.0,
+                height: 50.0,
+                child: IconButton(
+                  onPressed: () {
+                    _controller.decreaseQuantity();
+                  },
+                  color: Get.theme.primaryColor,
+                  icon: Icon(Icons.remove),
+                  iconSize: 24.0,
+                ),
               ),
-            ),
-            title: Obx(
-              () => Center(
-                child: Text(
-                  _controller.quantity.value.toString(),
+              title: Obx(
+                () => Center(
+                  child: Text(
+                    _controller.quantity.value.toString(),
+                  ),
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
