@@ -62,8 +62,10 @@ class SellsRepository {
   }
 
   Future<void> deleteLastDocument() async {
-    final CollectionReference _collection = FirebaseFirestore.instance.collection('products_sold');
     try {
+      final CollectionReference _collection = FirebaseFirestore.instance.collection('products_sold');
+      final CollectionReference _productsCollection = FirebaseFirestore.instance.collection('products');
+
       // Query to get the last document based on a timestamp field
       QuerySnapshot querySnapshot = await _collection.orderBy('date', descending: true).limit(1).get();
 
@@ -72,12 +74,30 @@ class SellsRepository {
         // Get the reference to the last document
         DocumentSnapshot lastDocument = querySnapshot.docs.first;
 
-        // Delete the document
+        // Get the sold amount from the last document
+        int soldAmount = lastDocument.get("quantity");
+        String productId = lastDocument.get("productId");
+
+        // Delete the last sold document
         await lastDocument.reference.delete();
+
+        // Update the available product amount in the database by adding the sold amount
+        QuerySnapshot productSnapshot = await _productsCollection.get();
+        if (productSnapshot.docs.isNotEmpty) {
+          DocumentSnapshot productDocument = await _productsCollection.doc(productId).get();
+          int currentAvailableAmount = productDocument.get("amountAvailable") ?? 0;
+          int updatedAvailableAmount = currentAvailableAmount + soldAmount;
+          await productDocument.reference.update({"amountAvailable": updatedAvailableAmount});
+          print("Product available amount updated successfully.");
+        } else {
+          print("No product documents found.");
+        }
+      } else {
+        print("No sold documents found.");
       }
     } catch (e) {
       // Handle errors
-      print("Failed to delete last document: $e");
+      print("Failed to delete last document and update available amount: $e");
     }
   }
 }

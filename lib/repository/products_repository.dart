@@ -32,6 +32,23 @@ class ProductsRepository {
     }
   }
 
+  Future<void> updateProductAmount({required String productId, required int amountDifference}) async {
+    try {
+      DocumentReference docRef = _firestore.collection('products').doc(productId);
+      DocumentSnapshot snapshot = await docRef.get();
+
+      if (snapshot.exists) {
+        int currentAmount = snapshot.get("amountAvailable");
+        int newAmount = currentAmount - amountDifference;
+        await docRef.update({"amountAvailable": newAmount});
+      } else {
+        print("Product with ID $productId does not exist.");
+      }
+    } catch (e) {
+      print("Error updating product amount: $e");
+    }
+  }
+
   Future<void> deleteProduct(String productId) async {
     try {
       // Reference to the document for the user in Firestore

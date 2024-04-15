@@ -23,21 +23,22 @@ class MainScreenController extends GetxController {
     return await ProductsRepository().getProducts();
   }
 
-  increaseQuantity() {
+  void increaseQuantity() {
     if (quantity.value < 20) quantity.value++;
   }
 
-  decreaseQuantity() {
+  void decreaseQuantity() {
     if (quantity.value > 1) quantity.value--;
   }
 
-  makeTransaction({required Product product}) async {
+  Future makeTransaction({required Product product}) async {
     ProductSold ps = ProductSold();
     ps.date = DateTime.now();
     ps.name = product.name;
     ps.price = product.price;
     ps.quantity = quantity.value;
     ps.category = product.category;
+    ps.productId = product.id;
 
     // Cache the last item that was sold
     lastProductSold = ps;
@@ -47,19 +48,23 @@ class MainScreenController extends GetxController {
     _displayCancelButton();
 
     await SellsRepository().addSell(ps);
+    await ProductsRepository().updateProductAmount(
+      productId: ps.productId!,
+      amountDifference: ps.quantity!,
+    );
   }
 
-  cancelLastTransaction() async {
+  Future cancelLastTransaction() async {
     cancelButtonIsVisible.value = false;
 
     await SellsRepository().deleteLastDocument();
   }
 
-  _resetQuantity() {
+  void _resetQuantity() {
     quantity.value = 1;
   }
 
-  _displayCancelButton() async {
+  Future _displayCancelButton() async {
     cancelButtonIsVisible.value = true;
     Timer(
       Duration(seconds: 60),
@@ -187,7 +192,7 @@ class MainScreen extends StatelessWidget {
                                                   ),
                                                 if (p.price != null)
                                                   Text(
-                                                  "(" + p.price!.toStringAsFixed(2) + ")",
+                                                    "(" + p.price!.toStringAsFixed(2) + ")",
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                     ),
