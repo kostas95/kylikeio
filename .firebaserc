@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "kylikeio-57a7d"
-  }
+    "default": "kylikeio-57a7d",
+    "kylikeio": "kylikeio-ddb41"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "677063786723",
-    "project_id": "kylikeio-57a7d",
-    "storage_bucket": "kylikeio-57a7d.appspot.com"
+    "project_number": "459425673243",
+    "project_id": "kylikeio-ddb41",
+    "storage_bucket": "kylikeio-ddb41.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:677063786723:android:25090de33bb7b3074005d6",
+        "mobilesdk_app_id": "1:459425673243:android:d0be7f0e6f9d5b7e61c8be",
         "android_client_info": {
           "package_name": "com.kylikeio.app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAln6NsOuS29OOJsIcHECiBzcUzU0ZbsFg"
+          "current_key": "AIzaSyDe-L2yAFe4bbB52sOAUuIUgmGyBDP8WHw"
         }
       ],
       "services": {
