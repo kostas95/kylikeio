@@ -1,0 +1,362 @@
+[
+  {
+    "active": true,
+    "amountAvailable": 39,
+    "category": "Chips - Snacks",
+    "name": "Μπάρες Δημητριακών",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 0.7
+  },
+  {
+    "active": true,
+    "amountAvailable": -1009,
+    "category": "Αναψυκτικά",
+    "name": "Νερό",
+    "notes": "ΔΕ ΜΕΤΡΗΘΗΚΕ ΜΕ ΕΝΤΟΛΗ ΕΛΜΑΡ",
+    "price": 0.2
+  },
+  {
+    "active": true,
+    "amountAvailable": 19,
+    "category": "Αναψυκτικά",
+    "name": "Ice Tea 330ml",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1
+  },
+  {
+    "active": true,
+    "amountAvailable": 12,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Ζαμπονοτυρόπιτα",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 21/05/2024",
+    "price": 1.4
+  },
+  {
+    "active": true,
+    "amountAvailable": 0,
+    "category": "Chips - Snacks",
+    "name": "Κριτσίνια",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1.1
+  },
+  {
+    "active": true,
+    "amountAvailable": 0,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Κρουασάν Σοκολάτα",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1
+  },
+  {
+    "active": true,
+    "amountAvailable": -63,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Nescafe",
+    "notes": "2 ΚΟΥΤΙΑ - 02/05/2024",
+    "price": 0.5
+  },
+  {
+    "active": false,
+    "amountAvailable": 0,
+    "category": "Chips - Snacks",
+    "name": "Γαριδάκια",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 0.7
+  },
+  {
+    "active": true,
+    "amountAvailable": 350,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Freddo Espresso",
+    "notes": "10 ΠΑΚΕΤΑ + 1 ΝΤΕΚΑΦ 22/05/2024",
+    "price": 0.7
+  },
+  {
+    "active": true,
+    "amountAvailable": 39,
+    "category": "Chips - Snacks",
+    "name": "Elite Crackers",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1.1
+  },
+  {
+    "active": true,
+    "amountAvailable": -10,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Espresso",
+    "notes": "22/05/2024",
+    "price": 0.7
+  },
+  {
+    "active": true,
+    "amountAvailable": 17,
+    "category": "Αναψυκτικά",
+    "name": "Χυμός 330ml",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1.1
+  },
+  {
+    "active": true,
+    "amountAvailable": 20,
+    "category": "Chips - Snacks",
+    "name": "Μπισκότα Παπαδοπούλου",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1.3
+  },
+  {
+    "active": true,
+    "amountAvailable": 26,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Αραβική Κοτόπουλο",
+    "notes": "ΣΥΝΟΛΟ ΒΓΑΖΟΥΜΕ 42 ΑΡΑΒΙΚΕΣ (3 ΚΟΥΤΙΑ) - 02/05/2024",
+    "price": 1.3
+  },
+  {
+    "active": true,
+    "amountAvailable": 62,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Κουλούρι Θεσσαλονίκης",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 21/05/2024",
+    "price": 0.5
+  },
+  {
+    "active": true,
+    "amountAvailable": -10,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Ελληνικός Διπλός",
+    "notes": "5 ΚΟΥΤΙΑ ΚΛΕΙΣΤΑ - 02/05/2024",
+    "price": 0.5
+  },
+  {
+    "active": true,
+    "amountAvailable": -1,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Τσάι",
+    "notes": " - ",
+    "price": 0.25
+  },
+  {
+    "active": true,
+    "amountAvailable": 2,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Μπιφτεκόπιτα",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 21/05/2024",
+    "price": 1.6
+  },
+  {
+    "active": true,
+    "amountAvailable": null,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Ζεστή Σοκολάτα",
+    "notes": " - ",
+    "price": 1.2
+  },
+  {
+    "active": true,
+    "amountAvailable": -5,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Americano",
+    "notes": "22/05/2024",
+    "price": 0.7
+  },
+  {
+    "active": true,
+    "amountAvailable": -13,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Cappuccino",
+    "notes": "22/05/2024",
+    "price": 1.1
+  },
+  {
+    "active": true,
+    "amountAvailable": 0,
+    "category": "Chips - Snacks",
+    "name": "Bruschette",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1.1
+  },
+  {
+    "active": true,
+    "amountAvailable": 18,
+    "category": "Chips - Snacks",
+    "name": "Πατατάκια",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 0.7
+  },
+  {
+    "active": false,
+    "amountAvailable": 0,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Κρουασάν Βουτύρου",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1
+  },
+  {
+    "active": true,
+    "amountAvailable": 18,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Τοστ τυρί - γαλοπούλα",
+    "notes": "ΣΥΝΟΛΟ ΒΓΑΖΟΥΜΕ 72 ΤΟΣΤ (6 ΠΑΚΕΤΑ) - 02/05/2024",
+    "price": 0.8
+  },
+  {
+    "active": true,
+    "amountAvailable": 25,
+    "category": "Αναψυκτικά",
+    "name": "Πορτοκαλάδα 330ml",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 0.9
+  },
+  {
+    "active": true,
+    "amountAvailable": 3,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Σπανακόπιτα Νηστίσιμη",
+    "notes": "ΝΗΣΤΙΣΙΜΕΣ + ΜΗ - ΜΕΤΡΗΘΗΚΕ 21/05/2024",
+    "price": 1.4
+  },
+  {
+    "active": true,
+    "amountAvailable": 2,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Τυρόπιτα",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 21/05/2024",
+    "price": 1
+  },
+  {
+    "active": true,
+    "amountAvailable": 0,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Λουκανικόπιτα",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1
+  },
+  {
+    "active": true,
+    "amountAvailable": 4,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Πεϊνιρλί",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 21/05/2024",
+    "price": 1.6
+  },
+  {
+    "active": true,
+    "amountAvailable": 0,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Πατατόπιτα",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1.4
+  },
+  {
+    "active": true,
+    "amountAvailable": 32,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Τοστ τυρί - ζαμπόν",
+    "notes": "ΣΥΝΟΛΟ ΒΓΑΖΟΥΜΕ 72 ΤΟΣΤ (6 ΠΑΚΕΤΑ) - 02/05/2024",
+    "price": 0.7
+  },
+  {
+    "active": true,
+    "amountAvailable": null,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Γαλλικός",
+    "notes": " - ",
+    "price": 0.5
+  },
+  {
+    "active": true,
+    "amountAvailable": null,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Ελληνικός Μονός",
+    "notes": "5 ΚΟΥΤΙΑ ΚΛΕΙΣΤΑ - 02/05/2024",
+    "price": 0.3
+  },
+  {
+    "active": true,
+    "amountAvailable": 1,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Κολοκυθόπιτα",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1.3
+  },
+  {
+    "active": true,
+    "amountAvailable": 35,
+    "category": "Αναψυκτικά",
+    "name": "Coca Cola",
+    "notes": "28 (330ml) + 24 (500ml) - ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 0.9
+  },
+  {
+    "active": true,
+    "amountAvailable": 12,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Σπανακόπιτα",
+    "notes": "ΝΗΣΤΙΣΙΜΕΣ + ΜΗ - ΜΕΤΡΗΘΗΚΕ 21/05/2024",
+    "price": 1.4
+  },
+  {
+    "active": false,
+    "amountAvailable": 0,
+    "category": "Αναψυκτικά",
+    "name": "Χυμός 250ml",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 0.8
+  },
+  {
+    "active": true,
+    "amountAvailable": 27,
+    "category": "Αναψυκτικά",
+    "name": "Hell 330ml",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 0.9
+  },
+  {
+    "active": false,
+    "amountAvailable": 0,
+    "category": "Chips - Snacks",
+    "name": "Σοκολάτα Milka",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1
+  },
+  {
+    "active": false,
+    "amountAvailable": null,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Espresso Lugo",
+    "notes": " - ",
+    "price": 0.7
+  },
+  {
+    "active": true,
+    "amountAvailable": 0,
+    "category": "Σφολιάτες - Σάντουιτς",
+    "name": "Hot dog",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 1
+  },
+  {
+    "active": true,
+    "amountAvailable": 64,
+    "category": "Chips - Snacks",
+    "name": "Γκοφρέτα",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 0.7
+  },
+  {
+    "active": false,
+    "amountAvailable": null,
+    "category": "Καφέδες - Ροφήματα",
+    "name": "Espresso Latte",
+    "notes": " -",
+    "price": 0.8
+  },
+  {
+    "active": true,
+    "amountAvailable": 28,
+    "category": "Chips - Snacks",
+    "name": "Κρουασάν",
+    "notes": "ΜΕΤΡΗΘΗΚΕ 02/05/2024",
+    "price": 0.7
+  }
+]
